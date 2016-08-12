@@ -3,3 +3,6 @@ _impact*
 
 #File editor temp files
 *~
+
+#Temporary files created by the script
+temp-*
