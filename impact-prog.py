@@ -29,3 +29,6 @@ if (args.svf):
     call( [args.impact, '-batch', 'temp-scansta.cmd'])
 
 call( [args.impact, '-batch', 'temp-fpga-load.cmd'])
+
+os.remove('temp-scansta.cmd')
+os.remove('temp-fpga-load.cmd')
