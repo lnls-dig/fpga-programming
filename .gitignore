@@ -6,3 +6,9 @@ _impact*
 
 #Temporary files created by the script
 temp-*
+
+#Binary files
+*.bit
+*.mcs
+*.cfi
+*.prm
