@@ -1,6 +1,7 @@
 setMode -bs
 setPreference -pref ConfigOnFailure:Stop
 setCable -port auto
+setCableSpeed -speed 12000000
 Identify -inferir
 identifyMPM
 attachflash -position 1 -spi "M25P128"
