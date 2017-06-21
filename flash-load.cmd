@@ -1,7 +1,6 @@
 setMode -bs
 setPreference -pref ConfigOnFailure:Stop
-setCable -port auto
-setCableSpeed -speed 12000000
+setCable -port usb21 -baud 12000000
 Identify -inferir
 identifyMPM
 attachflash -position 1 -spi "N25Q256"

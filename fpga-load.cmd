@@ -1,6 +1,5 @@
 setMode -bs
-setCable -port auto
-setCableSpeed -speed 12000000
+setCable -port usb21 -baud 12000000
 Identify -inferir
 identifyMPM
 assignFile -p 1 -file "${BITSTREAM_FILE}"
