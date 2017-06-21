@@ -10,6 +10,7 @@ parser.add_argument('--mcs', type=str, help='Path to MCS formatted that will be 
 parser.add_argument('--svf', type=str, help='SVF configuration file to run before the FPGA programming')
 parser.add_argument('--impact', type=str, help='Impact binary path', default='/opt/Xilinx/14.7/LabTools/LabTools/bin/lin/impact')
 parser.add_argument('--bit_to_mcs', action='store_true', help='Generate .mcs from given .bit file and write to FLASH',  default=False)
+parser.add_argument('-r', '--repetitions', type=int, help='Number of times to repeat the configuration proccess', default=1)
 
 args = parser.parse_args()
 
@@ -34,19 +35,22 @@ if (args.svf):
     call( [args.impact, '-batch', 'temp-scansta.cmd'])
     os.remove('temp-scansta.cmd')
 
-if (args.mcs):
-    print( '\n\nProgramming Flash!\n')
-    with open('flash-load.cmd','r') as flash_script_template, open('temp-flash-load.cmd','w') as flash_script_new:
-        for line in flash_script_template:
-            flash_script_new.write(line.replace('${MCS_FILE}', args.mcs))
-    call( [args.impact, '-batch', 'temp-flash-load.cmd'])
-    os.remove('temp-flash-load.cmd')
+for i in range(0, args.repetitions) :
+    #Program MCS file to FPGA FLASH
+    if (args.mcs):
+        print( '\n\nProgramming Flash!\n')
+        with open('flash-load.cmd','r') as flash_script_template, open('temp-flash-load.cmd','w') as flash_script_new:
+            for line in flash_script_template:
+                flash_script_new.write(line.replace('${MCS_FILE}', args.mcs))
+        call( [args.impact, '-batch', 'temp-flash-load.cmd'])
+        os.remove('temp-flash-load.cmd')
 
-if (args.bit):
-    print( '\n\nDownloading bitstream!\n')
-    with open('fpga-load.cmd','r') as bit_script_template, open('temp-fpga-load.cmd','w') as bit_script_new:
-        for line in bit_script_template:
-            bit_script_new.write(line.replace('${BITSTREAM_FILE}', args.bit))
-    call( [args.impact, '-batch', 'temp-fpga-load.cmd'])
-    os.remove('temp-fpga-load.cmd')
+    #Program bit file to FPGA RAM
+    if (args.bit):
+        print( '\n\nDownloading bitstream!\n')
+        with open('fpga-load.cmd','r') as bit_script_template, open('temp-fpga-load.cmd','w') as bit_script_new:
+            for line in bit_script_template:
+                bit_script_new.write(line.replace('${BITSTREAM_FILE}', args.bit))
+        call( [args.impact, '-batch', 'temp-fpga-load.cmd'])
+        os.remove('temp-fpga-load.cmd')
 
