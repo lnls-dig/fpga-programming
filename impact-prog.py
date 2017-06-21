@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from subprocess import call
 import os
 import argparse
@@ -12,7 +14,7 @@ parser.add_argument('--bit_to_mcs', action='store_true', help='Generate .mcs fro
 args = parser.parse_args()
 
 if (args.bit and args.mcs):
-    print( 'WARNING: This script will write both FLASH and FPGA RAM in this specific order, so the actual bitstream running will be in the FPGA RAM' )
+    print( 'WARNING: This script will write both FLASH and FPGA RAM in this specific order, so the actual bitstream running will be in the FPGA RAM until the FPGA is power cycled.' )
 
 #Create MCS file from given bitstream
 if (args.bit and args.bit_to_mcs):
