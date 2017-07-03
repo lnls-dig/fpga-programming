@@ -48,7 +48,7 @@ for i in range(0, args.repetitions) :
     #Program bit file to FPGA RAM
     if (args.bit):
         print( '\n\nDownloading bitstream!\n')
-        with open('fpga-vivado-load.cmd','r') as bit_script_template, open('temp-fpga-load.cmd','w') as bit_script_new:
+        with open('fpga-vivado-load.cmd','r') as bit_script_template, open('temp-fpga-vivado-load.cmd','w') as bit_script_new:
             for line in bit_script_template:
                 bit_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${BITSTREAM_FILE}', args.bit))
         call([args.vivado, '-mode', 'batch', '-source', 'temp-fpga-vivado-load.cmd'])
