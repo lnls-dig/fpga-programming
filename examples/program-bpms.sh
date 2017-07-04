@@ -6,6 +6,7 @@
 
 set -eoxo pipefail
 
+TOP_DIR=..
 PORT=(\
     "2544" \
     "2545" \
@@ -18,22 +19,23 @@ PORT=(\
     "2552" \
     )
 
+cd ${TOP_DIR}
 for port in ${PORT[*]}; do
     echo "Programming AFC located in port: "${port}
     bitstream=
     if [ "${port}" == "2544" ]; then
-        bitstream="../../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-bo-sirius-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
+        bitstream="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-bo-sirius-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
     elif [ "${port}" == "2545" ]; then
-        bitstream="../../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-sirius-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
+        bitstream="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-sirius-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
     else
-        bitstream="../../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-uvx-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
+        bitstream="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-uvx-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
     fi
 
     echo "Using bitstream: " ${bitstream}
 
-    command="time ../vivado-prog.py --bit_to_mcs \
+    command="time ./vivado-prog.py --bit_to_mcs \
         --bit=${bitstream} \
-        --svf=../afc-scansta.svf \
+        --svf=./afc-scansta.svf \
         --mcs=dbe_bpm2.mcs --host_url=10.2.118.36:${port}"
     eval ${command}
     echo "Programming AFC completed at: "
