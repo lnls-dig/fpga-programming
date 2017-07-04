@@ -7,6 +7,8 @@
 set -eoxo pipefail
 
 TOP_DIR=..
+BIT_EXTENSION=.bit
+MCS_EXTENSION=.mcs
 PORT=(\
     "2544" \
     "2545" \
@@ -22,21 +24,27 @@ PORT=(\
 cd ${TOP_DIR}
 for port in ${PORT[*]}; do
     echo "Programming AFC located in port: "${port}
-    bitstream=
+    bitstream_raw=
+    bitstream_bit=
+    bitstream_mcs=
     if [ "${port}" == "2544" ]; then
-        bitstream="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-bo-sirius-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
+        bitstream_raw="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-bo-sirius-v1.0.0-rc2-20170628-2fe9e3a8be"
     elif [ "${port}" == "2545" ]; then
-        bitstream="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-sirius-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
+        bitstream_raw="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-sirius-v1.0.0-rc2-20170628-2fe9e3a8be"
     else
-        bitstream="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-uvx-v1.0.0-rc2-20170628-2fe9e3a8be.bit"
+        bitstream_raw="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-uvx-v1.0.0-rc2-20170628-2fe9e3a8be"
     fi
+    bitstream_bit=${bitstream_raw}${BIT_EXTENSION}
+    bitstream_mcs=${bitstream_raw}${MCS_EXTENSION}
+    #bitstream="/home/lerwys/afcv3-bpm-gw-fmc250m-sr-sirius-v1.0.0-rc2-20170703-2fe9e3a8be.bit"
 
-    echo "Using bitstream: " ${bitstream}
+    echo "Using bitstream: " ${bitstream_bit}
 
     command="time ./vivado-prog.py --bit_to_mcs \
-        --bit=${bitstream} \
+        --bit=${bitstream_bit} \
         --svf=./afc-scansta.svf \
-        --mcs=dbe_bpm2.mcs --host_url=10.2.118.36:${port}"
+        --mcs=${bitstream_mcs} \
+        --host_url=10.2.118.36:${port}"
     eval ${command}
     echo "Programming AFC completed at: "
     date
