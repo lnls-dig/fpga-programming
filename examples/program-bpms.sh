@@ -6,7 +6,7 @@
 
 set -eoxo pipefail
 
-TOP_DIR=..
+SCRIPT_DIR=$(dirname "$0")
 BIT_EXTENSION=.bit
 MCS_EXTENSION=.mcs
 PORT=(\
@@ -21,7 +21,7 @@ PORT=(\
     "2552" \
     )
 
-cd ${TOP_DIR}
+cd ${SCRIPT_DIR}/../
 for port in ${PORT[*]}; do
     echo "Programming AFC located in port: "${port}
     bitstream_raw=
