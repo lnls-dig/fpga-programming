@@ -40,12 +40,13 @@ for port in ${PORT[*]}; do
 
     echo "Using bitstream: " ${bitstream_bit}
 
-    command="time ./vivado-prog.py --bit_to_mcs \
+    echo "Programming started at: "
+    date
+    ./vivado-prog.py --bit_to_mcs \
         --bit=${bitstream_bit} \
         --svf=./afc-scansta.svf \
         --mcs=${bitstream_mcs} \
-        --host_url=10.2.118.36:${port}"
-    eval ${command}
-    echo "Programming AFC completed at: "
+        --host_url=10.0.18.33:${port}
+    echo "Programming finished at: "
     date
 done
