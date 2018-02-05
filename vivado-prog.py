@@ -41,12 +41,12 @@ if (args.bit and args.bit_to_svf):
     os.remove('temp-svf-vivado-gen.cmd')
 
 #Write new impact batch command files based on templates
-if (args.svf):
+if (args.svf and not args.bit_to_svf):
     with open('scansta-vivado-cfg.cmd','r') as svf_script_template, open('temp-scansta-vivado.cmd','w') as svf_script_new:
         for line in svf_script_template:
             svf_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${SVF_FILE}', args.svf))
     call([args.vivado, '-mode', 'batch', '-source', 'temp-scansta-vivado.cmd'])
-#    os.remove('temp-scansta-vivado.cmd')
+    os.remove('temp-scansta-vivado.cmd')
 
 for i in range(0, args.repetitions) :
     #Program MCS file to FPGA FLASH
