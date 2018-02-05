@@ -24,7 +24,7 @@ if (args.prog_serial and args.prog_flash):
 if (args.bit and args.bit_to_mcs):
     with open('mcs-vivado-gen.cmd','r') as mcs_script_template, open('temp-mcs-vivado-gen.cmd','w') as mcs_script_new:
         for line in mcs_script_template:
-            mcs_script_new.write(line.replace('${BITSTREAM_FILE}', args.bit).replace('${MCS_NAME}', os.path.basename(args.bit).replace('.bit','.mcs')))
+            mcs_script_new.write(line.replace('${BITSTREAM_FILE}', args.bit).replace('${MCS_NAME}', args.bit.replace('.bit','.mcs')))
     call([args.vivado, '-mode', 'batch', '-source', 'temp-mcs-vivado-gen.cmd'])
     os.remove('temp-mcs-vivado-gen.cmd')
 
