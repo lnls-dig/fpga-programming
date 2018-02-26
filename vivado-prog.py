@@ -13,7 +13,7 @@ parser.add_argument('--svf', type=str, help='SVF configuration file to run befor
 parser.add_argument('--vivado', type=str, help='Vivado binary path', default='/opt/Xilinx/Vivado/2016.3/bin/vivado')
 parser.add_argument('--host_url', type=str, help='Host URL in format <ip>:<port>', default='localhost:3121')
 parser.add_argument('--bit_to_mcs', action='store_true', help='Generate .mcs from given .bit file and write to FLASH',  default=False)
-parser.add_argument('--mcs_to_svf', type=str, help='Generate .svf from given .bit file')
+parser.add_argument('--mcs_to_svf', type=str, help='Generate .svf from given .mcs file')
 parser.add_argument('-r', '--repetitions', type=int, help='Number of times to repeat the configuration proccess', default=1)
 
 args = parser.parse_args()
