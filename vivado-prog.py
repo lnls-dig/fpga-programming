@@ -6,8 +6,8 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Program Xilinx FPGA routed with SCANSTA JTAG switch using Vivado tool')
 parser.add_argument('--bit', type=str, help='Bitstream path')
-parser.add_argument('--prog_serial', type=str, help='Program FPGA via FPGA serial', default=False)
-parser.add_argument('--prog_flash', type=str, help='Program Flash via Indirect programming', default=False)
+parser.add_argument('--prog_serial', action='store_true', help='Program FPGA via FPGA serial', default=False)
+parser.add_argument('--prog_flash', action='store_true', help='Program Flash via Indirect programming', default=False)
 parser.add_argument('--mcs', type=str, help='Path to MCS formatted that will be written to FLASH')
 parser.add_argument('--svf', type=str, help='SVF configuration file to run before the FPGA programming')
 parser.add_argument('--vivado', type=str, help='Vivado binary path', default='/opt/Xilinx/Vivado/2016.3/bin/vivado')
