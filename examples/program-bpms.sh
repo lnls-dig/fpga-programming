@@ -4,49 +4,57 @@
 # using the vivado-prog.py script. It does not aim to be generic,
 # but to provide a starting point for more complex scripts
 
-set -eoxo pipefail
+set -eo pipefail
 
 SCRIPT_DIR=$(dirname "$0")
 BIT_EXTENSION=.bit
 MCS_EXTENSION=.mcs
-PORT=(\
-    "2544" \
-    "2545" \
-    "2546" \
-    "2547" \
-    "2548" \
-    "2549" \
-    "2550" \
-    "2551" \
-    "2552" \
+# This must follow the format "<port_number>,<bitstream_name_without_extension>"
+PORT_BITSTREAM=(\
+    "2541,bit1 " \
+    "2542,bit2 " \
+    "2543,bit3 " \
+    "2544,bit4 " \
+    "2545,bit5 " \
+    "2546,bit6 " \
+    "2547,bit7 " \
+    "2548,bit8 " \
+    "2549,bit9 " \
+    "2550,bit10" \
+    "2551,bit11" \
+    "2552,bit12" \
     )
 
 cd ${SCRIPT_DIR}/../
-for port in ${PORT[*]}; do
-    echo "Programming AFC located in port: "${port}
-    bitstream_raw=
-    bitstream_bit=
-    bitstream_mcs=
-    if [ "${port}" == "2544" ]; then
-        bitstream_raw="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-bo-sirius-v1.0.0-rc2-20170628-2fe9e3a8be"
-    elif [ "${port}" == "2545" ]; then
-        bitstream_raw="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-sirius-v1.0.0-rc2-20170628-2fe9e3a8be"
-    else
-        bitstream_raw="../rack_test/v1.0.0-rc2/afcv3-bpm-gw-fmc250m-sr-uvx-v1.0.0-rc2-20170628-2fe9e3a8be"
+for portbit in ${PORT_BITSTREAM[*]}; do
+    OLDIFS=$IFS; IFS=',';
+    # Separate "tuple" arguments with positional notation
+    set -- ${portbit};
+    port=$1
+    bitstream_raw=$2
+
+    if [ "${bitstream_raw}" ]; then
+        echo "Programming AFC located in port: "${port}
+
+        # Bitstream/MCS names
+        bitstream_bit=${bitstream_raw}${BIT_EXTENSION}
+        bitstream_mcs=${bitstream_raw}${MCS_EXTENSION}
+
+        echo "Using bitstream: " ${bitstream_bit}
+        echo "Using mcs: " ${bitstream_mcs}
+
+        echo "Programming started at: "
+        date
+        ./vivado-prog.py \
+            --bit_to_mcs \
+            --bit=${bitstream_bit} \
+            --mcs=${bitstream_mcs} \
+            --svf=./afc-scansta.svf \
+            --prog_flash \
+            --host_url=10.0.18.33:${port}
+        echo "Programming finished at: "
+        date
     fi
-    bitstream_bit=${bitstream_raw}${BIT_EXTENSION}
-    bitstream_mcs=${bitstream_raw}${MCS_EXTENSION}
-    #bitstream="/home/lerwys/afcv3-bpm-gw-fmc250m-sr-sirius-v1.0.0-rc2-20170703-2fe9e3a8be.bit"
 
-    echo "Using bitstream: " ${bitstream_bit}
-
-    echo "Programming started at: "
-    date
-    ./vivado-prog.py --bit_to_mcs \
-        --bit=${bitstream_bit} \
-        --svf=./afc-scansta.svf \
-        --mcs=${bitstream_mcs} \
-        --host_url=10.0.18.33:${port}
-    echo "Programming finished at: "
-    date
-done
+    IFS=$OLDIFS;
+done;
