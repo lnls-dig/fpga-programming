@@ -3,8 +3,6 @@ connect_hw_server
 create_hw_target flash_afcv3
 open_hw_target
 
-execute_hw_svf "${SVF_FILE}"
-
 create_hw_device -part xc7a200t
 create_hw_cfgmem -hw_device [lindex [get_hw_devices] 0] -mem_dev  [lindex [get_cfgmem_parts {n25q256-3.3v-spi-x1_x2_x4}] 0]
 
