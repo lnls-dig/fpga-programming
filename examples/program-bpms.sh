@@ -8,7 +8,8 @@ set -euxo pipefail
 
 MCH_IP=$1
 
-SCRIPT_DIR=$(dirname "$0")
+SCRIPTPATH="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
+
 BIT_EXTENSION=.bit
 MCS_EXTENSION=.mcs
 # This must follow the format "<port_number>,<bitstream_name_without_extension>"
@@ -27,7 +28,6 @@ PORT_BITSTREAM=(\
     "2552,bit12" \
     )
 
-cd ${SCRIPT_DIR}/../
 for portbit in ${PORT_BITSTREAM[*]}; do
     OLDIFS=$IFS; IFS=',';
     # Separate "tuple" arguments with positional notation
@@ -45,14 +45,16 @@ for portbit in ${PORT_BITSTREAM[*]}; do
         echo "Using bitstream: " ${bitstream_bit}
         echo "Using mcs: " ${bitstream_mcs}
 
-        echo "Programming started at: "
-        time ./vivado-prog.py \
+        bash -c "\
+            cd ${SCRIPTPATH}/../ && \
+            time ./vivado-prog.py \
             --bit_to_mcs \
             --bit=${bitstream_bit} \
             --mcs=${bitstream_mcs} \
             --svf=./afc-scansta.svf \
             --prog_flash \
-            --host_url=${MCH_IP}:${port}
+            --host_url=${MCH_IP}:${port} \
+        "
     fi
 
     IFS=$OLDIFS;
