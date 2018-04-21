@@ -6,6 +6,8 @@
 
 set -euxo pipefail
 
+MCH_IP=$1
+
 SCRIPT_DIR=$(dirname "$0")
 BIT_EXTENSION=.bit
 MCS_EXTENSION=.mcs
@@ -50,6 +52,7 @@ for portbit in ${PORT_BITSTREAM[*]}; do
             --mcs=${bitstream_mcs} \
             --svf=./afc-scansta.svf \
             --prog_flash \
+            --host_url=${MCH_IP}:${port}
     fi
 
     IFS=$OLDIFS;
