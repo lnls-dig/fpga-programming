@@ -44,16 +44,12 @@ for portbit in ${PORT_BITSTREAM[*]}; do
         echo "Using mcs: " ${bitstream_mcs}
 
         echo "Programming started at: "
-        date
-        ./vivado-prog.py \
+        time ./vivado-prog.py \
             --bit_to_mcs \
             --bit=${bitstream_bit} \
             --mcs=${bitstream_mcs} \
             --svf=./afc-scansta.svf \
             --prog_flash \
-            --host_url=10.0.18.33:${port}
-        echo "Programming finished at: "
-        date
     fi
 
     IFS=$OLDIFS;
