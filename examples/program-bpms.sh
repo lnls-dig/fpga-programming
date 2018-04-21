@@ -4,7 +4,7 @@
 # using the vivado-prog.py script. It does not aim to be generic,
 # but to provide a starting point for more complex scripts
 
-set -eo pipefail
+set -euxo pipefail
 
 SCRIPT_DIR=$(dirname "$0")
 BIT_EXTENSION=.bit
