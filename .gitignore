@@ -12,3 +12,9 @@ temp-*
 *.mcs
 *.cfi
 *.prm
+
+#Xilinx Vivado log files
+.Xil/
+*.jou
+*.str
+*.log
