@@ -1,5 +1,5 @@
 open_hw
-connect_hw_server
+connect_hw_server -url "${HW_SERVER_URL}"
 create_hw_target flash_afcv3
 open_hw_target
 

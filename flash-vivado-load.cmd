@@ -1,5 +1,5 @@
 open_hw
-connect_hw_server -quiet
+connect_hw_server -quiet -url "${HW_SERVER_URL}"
 open_hw_target -quiet -xvc_url "${HOST_URL}"
 
 create_hw_cfgmem -hw_device [lindex [get_hw_devices] 0] -mem_dev  [lindex [get_cfgmem_parts {n25q256-3.3v-spi-x1_x2_x4}] 0]
