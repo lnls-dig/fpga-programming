@@ -1,9 +1,29 @@
 #!/usr/bin/env python
 
-from subprocess import call
+from subprocess import call, Popen
 import os
 import argparse
+import signal
 
+def get_hw_server_pids(hw_server_url):
+    pids = []
+    for dirname in os.listdir('/proc'):
+        if dirname == 'curproc':
+            continue
+        try:
+            with open('/proc/{}/cmdline'.format(dirname), mode='rb') as fd:
+                content = fd.read().decode().split('\x00')
+        except Exception:
+            continue
+        if ('tcp:'+hw_server_url) in content:
+            pids.append(dirname)
+    return pids
+
+def kill_hw_server_procs(hw_server_url):
+    pids = get_hw_server_pids(hw_server_url)
+    for proc in pids:
+        os.kill(int(proc), signal.SIGKILL)
+            
 parser = argparse.ArgumentParser(description='Program Xilinx FPGA routed with SCANSTA JTAG switch using Vivado tool')
 parser.add_argument('--bit', type=str, help='Bitstream path')
 parser.add_argument('--prog_serial', action='store_true', help='Program FPGA via FPGA serial', default=False)
@@ -11,7 +31,9 @@ parser.add_argument('--prog_flash', action='store_true', help='Program Flash via
 parser.add_argument('--mcs', type=str, help='Path to MCS formatted that will be written to FLASH')
 parser.add_argument('--svf', type=str, help='SVF configuration file to run before the FPGA programming')
 parser.add_argument('--vivado', type=str, help='Vivado binary path', default='/opt/Xilinx/Vivado/2016.3/bin/vivado')
+parser.add_argument('--hw_server', type=str, help='HW Server binary path', default='/opt/Xilinx/Vivado/2016.3/bin/hw_server')
 parser.add_argument('--host_url', type=str, help='Host URL in format <ip>:<port>', default='localhost:3121')
+parser.add_argument('--hw_server_url', type=str, help='HW Server Host URL in format <ip>:<port>', default='localhost:3121')
 parser.add_argument('--bit_to_mcs', action='store_true', help='Generate .mcs from given .bit file and write to FLASH',  default=False)
 parser.add_argument('--mcs_to_svf', type=str, help='Generate .svf from given .mcs file')
 parser.add_argument('--bit_to_svf', type=str, help='Generate .svf from given .bit file')
@@ -64,8 +86,10 @@ if (args.bit and args.bit_to_svf):
 if (args.svf and not args.mcs_to_svf and not args.bit_to_svf):
     with open('scansta-vivado-cfg.cmd','r') as svf_script_template, open(str(os.getpid())+'temp-scansta-vivado.cmd','w') as svf_script_new:
         for line in svf_script_template:
-            svf_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${SVF_FILE}', args.svf))
+            svf_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${SVF_FILE}', args.svf).replace('${HW_SERVER_URL}', args.hw_server_url))
+    hw_server_p = Popen([args.hw_server, '-s', 'tcp:'+args.hw_server_url])
     call([args.vivado, '-mode', 'batch', '-source', str(os.getpid())+'temp-scansta-vivado.cmd'])
+    kill_hw_server_procs(args.hw_server_url)
     os.remove(str(os.getpid())+'temp-scansta-vivado.cmd')
 
 for i in range(0, args.repetitions) :
@@ -74,8 +98,10 @@ for i in range(0, args.repetitions) :
         print( '\n\nProgramming Flash!\n')
         with open('flash-vivado-load.cmd','r') as flash_script_template, open(str(os.getpid())+'temp-flash-vivado-load.cmd','w') as flash_script_new:
             for line in flash_script_template:
-                flash_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${MCS_FILE}', args.mcs))
+                flash_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${MCS_FILE}', args.mcs).replace('${HW_SERVER_URL}', args.hw_server_url))
+        hw_server_p = Popen([args.hw_server, '-s', 'tcp:'+args.hw_server_url])
         call([args.vivado, '-mode', 'batch', '-source', str(os.getpid())+'temp-flash-vivado-load.cmd'])
+        kill_hw_server_procs(args.hw_server_url)
         os.remove(str(os.getpid())+'temp-flash-vivado-load.cmd')
 
     #Program bit file to FPGA RAM
@@ -83,7 +109,9 @@ for i in range(0, args.repetitions) :
         print( '\n\nDownloading bitstream!\n')
         with open('fpga-vivado-load.cmd','r') as bit_script_template, open(str(os.getpid())+'temp-fpga-vivado-load.cmd','w') as bit_script_new:
             for line in bit_script_template:
-                bit_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${BITSTREAM_FILE}', args.bit))
+                bit_script_new.write(line.replace('${HOST_URL}', args.host_url).replace('${BITSTREAM_FILE}', args.bit).replace('${HW_SERVER_URL}', args.hw_server_url))
+        hw_server_p = Popen([args.hw_server, '-s', 'tcp:'+args.hw_server_url])
         call([args.vivado, '-mode', 'batch', '-source', str(os.getpid())+'temp-fpga-vivado-load.cmd'])
+        kill_hw_server_procs(args.hw_server_url)
         os.remove(str(os.getpid())+'temp-fpga-vivado-load.cmd')
 
