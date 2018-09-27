@@ -23,7 +23,7 @@ def kill_hw_server_procs(hw_server_url):
     pids = get_hw_server_pids(hw_server_url)
     for proc in pids:
         os.kill(int(proc), signal.SIGKILL)
-            
+
 parser = argparse.ArgumentParser(description='Program Xilinx FPGA routed with SCANSTA JTAG switch using Vivado tool')
 parser.add_argument('--bit', type=str, help='Bitstream path')
 parser.add_argument('--prog_serial', action='store_true', help='Program FPGA via FPGA serial', default=False)
