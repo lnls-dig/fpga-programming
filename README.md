@@ -29,3 +29,13 @@ is intended to be run with a JTAG tool for Serial programming,
 such as the one available inside Vivado
 
     ./vivado-prog.py --svf=<svf_to_be executed_prior_to_programming> --bit_to_svf=<output_svf_filename> --bit=<bitstream_filename>
+
+## Calling multiple instances
+
+One can run this script multiple times in parallel, setting a different port for the hw_server.
+To program the FPGA Flash:
+
+    ./vivado-prog.py --svf=<svf_to_be executed_prior_to_programming> --prog_flash --mcs=<bitstream_filename_with_mcs_extension> --bit_to_mcs --host_url=<remote_ip1>:<remote_port1> --hw_server_url <hw_server_ip>:<port1> --bit=<bitstream_filename> &
+    ./vivado-prog.py --svf=<svf_to_be executed_prior_to_programming> --prog_flash --mcs=<bitstream_filename_with_mcs_extension> --bit_to_mcs --host_url=<remote_ip2>:<remote_port2> --hw_server_url <hw_server_ip>:<port2> --bit=<bitstream_filename> &
+
+Note that port1 and port2 must be different. Their values are arbitrary, but the safer option is to use values greater than 2000, avoiding conflict with other open ports
