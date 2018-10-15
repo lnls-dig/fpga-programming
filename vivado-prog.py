@@ -78,9 +78,9 @@ if (args.bit and args.bit_to_svf):
     call([args.vivado, '-mode', 'batch', '-source', str(os.getpid())+'temp-svf-serial-vivado-gen.cmd'])
     os.remove(str(os.getpid())+'temp-svf-serial-vivado-gen.cmd')
     # Now, prepend the input SVF with the generated one
-    with open(args.mcs_to_svf, 'r') as original: data = original.read()
+    with open(args.bit_to_svf, 'r') as original: data = original.read()
     with open(args.svf, 'r') as svf_prepend: svf_data = svf_prepend.read()
-    with open(args.mcs_to_svf, 'w') as modified: modified.write(svf_data + data)
+    with open(args.bit_to_svf, 'w') as modified: modified.write(svf_data + data)
 
 #Write new impact batch command files based on templates
 if (args.svf and not args.mcs_to_svf and not args.bit_to_svf):
