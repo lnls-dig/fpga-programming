@@ -59,7 +59,7 @@ if (args.bit and args.mcs_to_svf):
         quit()
     with open('svf-vivado-gen.cmd','r') as svf_script_template, open(str(os.getpid())+'temp-svf-vivado-gen.cmd','w') as svf_script_new:
         for line in svf_script_template:
-            svf_script_new.write(line.replace('${SVF_FILE}', args.svf).replace('${MCS_FILE}', args.bit.replace('.bit','.mcs')).replace('${BITSTREAM_FILE}', args.bit).replace('${OUTPUT_SVF_FILE}', args.mcs_to_svf))
+            svf_script_new.write(line.replace('${SVF_FILE}', args.svf).replace('${MCS_FILE}', args.bit.replace('.bit','.mcs')).replace('${HW_SERVER_URL}', args.hw_server_url).replace('${BITSTREAM_FILE}', args.bit).replace('${OUTPUT_SVF_FILE}', args.mcs_to_svf))
     call([args.vivado, '-mode', 'batch', '-source', str(os.getpid())+'temp-svf-vivado-gen.cmd'])
     os.remove(str(os.getpid())+'temp-svf-vivado-gen.cmd')
     # Now, prepend the input SVF with the generated one
