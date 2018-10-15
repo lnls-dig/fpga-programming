@@ -74,7 +74,7 @@ if (args.bit and args.bit_to_svf):
         quit()
     with open('svf-serial-vivado-gen.cmd','r') as svf_script_template, open(str(os.getpid())+'temp-svf-serial-vivado-gen.cmd','w') as svf_script_new:
         for line in svf_script_template:
-            svf_script_new.write(line.replace('${SVF_FILE}', args.svf).replace('${BITSTREAM_FILE}', args.bit).replace('${OUTPUT_SVF_FILE}', args.bit_to_svf))
+            svf_script_new.write(line.replace('${SVF_FILE}', args.svf).replace('${BITSTREAM_FILE}', args.bit).replace('${HW_SERVER_URL}', args.hw_server_url).replace('${OUTPUT_SVF_FILE}', args.bit_to_svf))
     call([args.vivado, '-mode', 'batch', '-source', str(os.getpid())+'temp-svf-serial-vivado-gen.cmd'])
     os.remove(str(os.getpid())+'temp-svf-serial-vivado-gen.cmd')
     # Now, prepend the input SVF with the generated one
