@@ -16,14 +16,20 @@ parser.add_argument('--host_pass', type=str, help='Host password', default='nat'
 
 args = parser.parse_args()
 
-print( '\n\nDownloading bitstream: {bitstream}, in Crate: {crate}, slot number: {slot}\n'.format(
-    	  bistream=args.nsvf, crate=args.host_ip, slot=args.slot))
-call([args.curl_bin, 
-    '-H "Content-Type: multipart/form-data"', 
-    '-F "XsvfReqTarget=${SLOT_NSVF}"'.replace('${SLOT_NSVF}', args.slot),
-    '-F "XsvfReqFreq=${FREQ_TARGET}"'.replace('${FREQ_TARGET}', args.freq_target),
-    '-F "filename=@${BITSTREAM_NSVF}"'.replace('${BITSTREAM_NSVF}', args.nsvf),
-    '-X POST',
-    '-u "${HOST_USER}":"${HOST_PASS}"'.replace('${HOST_USER}', args.host_user).replace('${HOST_PASS}', args.host_pass),
-    '"http://${HOST_IP}/goform/ctrl_svf_proc"'.replace('${HOST_IP}', args.host_ip)
+print('\nDownloading bitstream: {bitstream}, in Crate: {crate}, slot number: {slot}\n'.format(
+    bitstream=args.nsvf, crate=args.host_ip, slot=args.slot))
+call([args.curl_bin,
+    '-H',
+    '"Content-Type: multipart/form-data"',
+    '-F',
+    '"XsvfReqTarget=${SLOT_NSVF}"'.replace('${SLOT_NSVF}', str(args.slot)),
+    '-F',
+    '"XsvfReqFreq=${FREQ_TARGET}"'.replace('${FREQ_TARGET}', str(args.freq_target)),
+    '-F',
+    '"filename=@${BITSTREAM_NSVF}"'.replace('${BITSTREAM_NSVF}', args.nsvf),
+    '-X',
+    'POST',
+    '-u',
+    '"${HOST_USER}":"${HOST_PASS}"'.replace('${HOST_USER}', args.host_user).replace('${HOST_PASS}', args.host_pass),
+    'http://${HOST_IP}/goform/ctrl_svf_proc'.replace('${HOST_IP}', args.host_ip)
     ])
