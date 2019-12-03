@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
-from subprocess import call, Popen
-import os
+from subprocess import call
 import argparse
-import signal
 
 parser = argparse.ArgumentParser(description='Program NAT AMC FPGA using CURL tool')
 parser.add_argument('nsvf', type=str, help='nSVF configuration file to program FPGA (need to use NAT nsvf tool)')
