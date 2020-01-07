@@ -18,10 +18,12 @@ This is used to program a bitstream through Indirect Flash mode:
 
 If using NAT MCH with nSVF + CURL support you can use the following:
 
-    ./curl-prog.py <nsvf_to_be_programmed> <host> <slot_to_be_programmed>
+    ./curl-prog.py <nsvf_to_be_programmed> <host> <slot_to_be_programmed (see NAT JSM manual)>
 
 Be advised that you need to generate a .svf file from a .bit file and
-then convert it to the .nsvf file uysing the NAT provided binary.
+then convert it to the .nsvf file using the NAT provided binary.
+
+To generate a .svf file for either serial of flash programming, see below.
 
 ## Generation of .svf file from bitstream for Flash programming
 
