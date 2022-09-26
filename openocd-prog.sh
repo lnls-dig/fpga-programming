@@ -14,6 +14,7 @@ sfp_jtag=""
 if [ "$board" = "afcv3" ]; then
 	scansta_cmd="svf afc-scansta.svf -quiet"
 elif [ "$board" = "afcv4" ]; then
+	sfp_jtag=""
 elif [ "$board" = "afcv4_sfp" ]; then
 	sfp_jtag="jtag newtap auto0 tap -irlen 8 -ignore-version -expected-id 0x16d4a093"
 else
@@ -42,7 +43,7 @@ elif [ "$interface" = "xvc" ]; then
 			-c "xvc_host ${xvc_host}" \
 			-c "xvc_port ${xvc_port}" \
 			-c "reset_config none" \
-			-c "${afcv4_sfp}" \
+			-c "${sfp_jtag}" \
 			-c "jtag newtap xc7 tap -irlen 6 -ignore-version -expected-id 0x03636093" \
 			-c "pld device virtex2 xc7.tap 1" \
 			-c "init" \
