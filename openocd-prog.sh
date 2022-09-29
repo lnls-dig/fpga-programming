@@ -5,7 +5,7 @@ board="$2"
 interface="$3"
 
 if [ -z "$bitstream" -o -z "$board" -o -z "$interface" ]; then
-	echo "Usage: $0 bitstream_file board interface"
+	echo "Usage: $0 bitstream.bit board interface"
 	exit 1
 fi
 
