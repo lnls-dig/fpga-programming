@@ -33,7 +33,7 @@ elif [ "$interface" = "xvc" ]; then
 	xvc_port="$4"
 
 	if [ -z "$xvc_host" -o -z "$xvc_port" ]; then
-		echo "Usage: $0 bitstream_file board xvc hostname port"
+		echo "Usage: $0 board xvc hostname port"
 		exit 1
 	fi
 
